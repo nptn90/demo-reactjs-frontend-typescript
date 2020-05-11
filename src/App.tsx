@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import RouterURLComponent from './component/RouterURL/RouterURLComponent';
+import { BrowserRouter as Router } from 'react-router-dom';
+import NavComponent from './component/Nav/NavigationComponent';
+import AuthenticationProvider from './component/commonService/authenticationService';
+import IntervalService from './component/commonService/IntervalService'
+import { ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+class App extends Component {
+
+  intervalService: IntervalService = new IntervalService();
+
+  componentDidMount() {
+    this.restoreInterval();
+  }
+
+  restoreInterval() {
+    console.log("restoreInterval");
+    let token = sessionStorage.getItem('token');
+    let tokenExpirationTime = sessionStorage.getItem('tokenExpirationTime');
+    if(token && tokenExpirationTime) {
+      this.intervalService.intervalRefreshToken(Number.parseInt(tokenExpirationTime));
+    }
+  }
+
+  render() {
+    return (
+      <AuthenticationProvider>
+        <Router>
+          <NavComponent/>
+          <RouterURLComponent/>
+          <ToastContainer />
+        </Router>
+      </AuthenticationProvider>
+    )  
+  };
+};
 
 export default App;

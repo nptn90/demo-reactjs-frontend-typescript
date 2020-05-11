@@ -1,0 +1,69 @@
+[
+    {
+        "id": "1",
+        "name": "Angular 4x",
+        "time": "30h",
+        "free": true,
+        "desc": "Angular is complicated",
+        "lessons": [
+            {
+                "id": "1",
+                "name": "Basic Angular"
+            },
+            {
+                "id": "2",
+                "name": "Advance Angular"
+            },
+            {
+                "id": "3",
+                "name": "Summary Angular"
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "name": "NodeJs",
+        "time": "55h",
+        "free": false,
+        "courseName": "NodeJs",
+        "lessons": [
+            {
+                "id": "4",
+                "name": "Basic NodeJs"
+            },
+            {
+                "id": "5",
+                "name": "Advance NodeJs"
+            },
+            {
+                "id": "6",
+                "name": "Summary NodeJs"
+            }
+        ]
+    },
+    {
+        "id": "3",
+        "name": "ReactJS",
+        "time": "40h",
+        "free": true,
+        "desc": "ReactJS is simple",
+        "lessons": [
+            {
+                "id": "7",
+                "name": "Basic ReactJS"
+            },
+            {
+                "id": "8",
+                "name": "Advance ReactJS"
+            },
+            {
+                "id": "9",
+                "name": "Extrame ReactJS"
+            },
+            {
+                "id": "10",
+                "name": "Summary ReactJS"
+            }
+        ]
+    }
+]
