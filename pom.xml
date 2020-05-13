@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>demoReactJS</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-FRONTEND-SNAPSHOT</version>
 	<name>demoReactJS-front-end</name>
 	<description>Demo react js project front-end</description>
 
@@ -64,12 +64,17 @@
                             </execution>
                         </executions>
                     </plugin>
-					<!-- <plugin>
+					<plugin>
 						<groupId>com.google.cloud.tools</groupId>
 						<artifactId>jib-maven-plugin</artifactId>
 						<configuration>
+							<container>
+								<entrypoint>nginx</entrypoint>
+								<entrypoint>-g</entrypoint>
+								<entrypoint>daemon off;</entrypoint>
+							</container>
 							<from>
-								<image>adoptopenjdk:11-jre-openj9</image>
+								<image>nginx:latest</image>
 								<auth>
 					               <username>nptn90</username>
 					               <password>Matkhau1990@</password>
@@ -84,7 +89,7 @@
 							</to>
 							<allowInsecureRegistries>true</allowInsecureRegistries>
 						</configuration>
-					</plugin> -->
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
