@@ -2,6 +2,7 @@ version: "3"
 services:
   web:
     build: .
+    image: nptn90/reactdemo-frontend:latest
     ports: 
       - "80:80"
     expose: 
