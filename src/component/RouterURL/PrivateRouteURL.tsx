@@ -3,10 +3,10 @@ import { Route, Redirect, RouteProps } from "react-router-dom";
 
 
 
-const PrivateRouteURL: React.FC<RouteProps> = ({component: Component, ...rest}) => (
+const PrivateRouteURL = ({component, ...rest}: any) => (
     <Route {...rest} render={(props: any) =>(
         (sessionStorage.getItem('token')) 
-        ? (<React.Component<any, any> {...props}/>)
+        ? (React.createElement(component, props))
         :<Redirect to={{
             pathname: "/login",
             state: {from: props.location}
