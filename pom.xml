@@ -64,32 +64,6 @@
                             </execution>
                         </executions>
                     </plugin>
-					<plugin>
-						<groupId>com.google.cloud.tools</groupId>
-						<artifactId>jib-maven-plugin</artifactId>
-						<configuration>
-							<container>
-								<entrypoint>nginx</entrypoint>
-								<entrypoint>-g</entrypoint>
-								<entrypoint>daemon off;</entrypoint>
-							</container>
-							<from>
-								<image>nginx:latest</image>
-								<auth>
-					               <username>nptn90</username>
-					               <password>Matkhau1990@</password>
-					           </auth>
-							</from>
-							<to>
-								<image>nptn90/reactdemo:${project.version}</image>
-								<auth>
-					               <username>nptn90</username>
-					               <password>Matkhau1990@</password>
-					           </auth>
-							</to>
-							<allowInsecureRegistries>true</allowInsecureRegistries>
-						</configuration>
-					</plugin>
 				</plugins>
 			</build>
 		</profile>
