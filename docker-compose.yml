@@ -4,6 +4,4 @@ services:
     build: .
     image: nptn90/reactdemo-frontend:latest
     ports: 
-      - "80:80"
-    expose: 
-      - 80
+      - "81:80"
