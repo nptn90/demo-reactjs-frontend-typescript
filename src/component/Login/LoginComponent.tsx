@@ -4,6 +4,7 @@ import LoginService from './LoginService'
 import { AuthContext } from '../commonService/authenticationService';
 import IntervalService from '../commonService/IntervalService'
 import { UserLogin } from './UserModel';
+import * as env from '../commonService/environmentHelper'
 
 class LoginComponent extends Component<any, any> {
 
@@ -56,9 +57,7 @@ class LoginComponent extends Component<any, any> {
         })
         .catch((error:any) => {
             console.log(error);
-        });
-
-        
+        });        
     }
     
 
@@ -66,6 +65,8 @@ class LoginComponent extends Component<any, any> {
 
         const {isRedirectToReffer} = this.state;
         const {from} = this.props.location.state || {from: {pathname: "/"}}
+        let envValue = env.getEnvironmentValue('REACT_APP_HELLO_STRING');
+        console.log(envValue);
 
         if(isRedirectToReffer) {
             return <Redirect to={from.pathname}/>

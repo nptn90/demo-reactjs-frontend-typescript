@@ -1,6 +1,7 @@
 import axios from 'axios'
+import * as env from "../commonService/environmentHelper";
 
-const baseURL = 'http://localhost/server1/api';
+const baseURL = env.getEnvironmentValue('REACT_APP_BASE_URL');
 
 //const baseURL = 'http://localhost:8085/server1/api';
 
