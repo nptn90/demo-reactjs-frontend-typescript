@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { FC, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import LoginService from './LoginService'
 import { AuthContext } from '../commonService/authenticationService';
@@ -6,101 +6,95 @@ import IntervalService from '../commonService/IntervalService'
 import { UserLogin } from './UserModel';
 import * as env from '../commonService/environmentHelper'
 
-class LoginComponent extends Component<any, any> {
+const LoginComponent: FC = (props: any) => {
 
-    loginService: LoginService = new LoginService();
-    intervalService: IntervalService = new IntervalService();
+  const loginService: LoginService = new LoginService();
+  const intervalService: IntervalService = new IntervalService();
 
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            isRedirectToReffer: false
-        }
-        this.handleLogin = this.handleLogin.bind(this);
-        this.handleChangeInput = this.handleChangeInput.bind(this);
-        this.state = {
-            userName: null,
-            passWord: null,
-        }
+  const [isRedirectToReffer, setIsRedirectToReffer] = useState(false);
+  const [inputs, setInputs] = useState<InputForm>({
+    userName: '',
+    passWord: ''
+  })
+
+  const handleChangeInput = (event: any) => {
+    const key = event.target.name;
+    const value = event.target.value;
+    setInputs({
+      ...inputs,
+      [key]: value
+    })
+  }
+
+  const refreshToken = (expirationDate: number) => {
+    intervalService.intervalRefreshToken(expirationDate);
+  }
+
+  const handleLogin = (event: any, context: any) => {
+    event.preventDefault();
+    const user: UserLogin = {
+      passWord: inputs.passWord,
+      userName: inputs.userName
     }
 
-    handleChangeInput(event: any) {
-        const key = event.target.name;
-        const value = event.target.value;
-        this.setState({
-            [key]: value
-        })
-    }
+    loginService.login(user)
+      .then((response: any) => {
+        let token = response.data;
 
-    refreshToken(expirationDate: number) {
-        this.intervalService.intervalRefreshToken(expirationDate);
-    }
+        context.login(user.userName, token);
+        sessionStorage.setItem('token', token.token);
+        sessionStorage.setItem('tokenExpirationTime', token.expirationDate);
 
-    handleLogin(event: any, context: any) {
-        event.preventDefault();
-        let user: UserLogin = {
-            passWord: this.state.passWord,
-            userName: this.state.userName
-        }
+        refreshToken(token.expirationDate);
+        context.displayToken();
+        setIsRedirectToReffer(true)
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+  }
 
-        this.loginService.login(user)
-        .then((response: any) => {
-            let token = response.data;
-            context.login(user.userName, token);
-            sessionStorage.setItem('token', token.token);
-            sessionStorage.setItem('tokenExpirationTime', token.expirationDate);
-            this.refreshToken(token.expirationDate);
-            context.displayToken();
-            this.setState({
-                isRedirectToReffer: true,
-            })
-        })
-        .catch((error:any) => {
-            console.log(error);
-        });        
-    }
-    
+  const { from } = props.location.state || { from: { pathname: "/" } }
+  let envValue = env.getEnvironmentValue('REACT_APP_HELLO_STRING');
+  console.log(envValue);
 
-    render() {
-
-        const {isRedirectToReffer} = this.state;
-        const {from} = this.props.location.state || {from: {pathname: "/"}}
-        let envValue = env.getEnvironmentValue('REACT_APP_HELLO_STRING');
-        console.log(envValue);
-
-        if(isRedirectToReffer) {
-            return <Redirect to={from.pathname}/>
-        } else {
-            return (
-                <div className="simple-login-container">
-                    <h2>Login Form</h2>
-                    <AuthContext.Consumer>
-                        {(context) => {
-                            let loginFormElement = <form onSubmit={(event)=>this.handleLogin(event, context)}>
-                                                        <div className="row">
-                                                            <div className="col-md-12 form-group">
-                                                                <input name="userName" type="text" onChange={(event) => this.handleChangeInput(event)} className="form-control" placeholder="Username" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-md-12 form-group">
-                                                                <input name="passWord" type="password" onChange={(event) => this.handleChangeInput(event)} placeholder="Enter your Password" className="form-control" />
-                                                            </div>
-                                                        </div>
-                                                        <div className="row">
-                                                            <div className="col-md-12 form-group">
-                                                                <button type="submit" className="btn btn-block btn-login">Login</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                             return loginFormElement;
-                        }}
-                    </AuthContext.Consumer>
-                   
+  if (isRedirectToReffer) {
+    return <Redirect to={from.pathname} />
+  } else {
+    return (
+      <div className="simple-login-container">
+        <h2>Login Form</h2>
+        <AuthContext.Consumer>
+          {(context) => {
+            let loginFormElement = <form onSubmit={(event) => handleLogin(event, context)}>
+              <div className="row">
+                <div className="col-md-12 form-group">
+                  <input name="userName" type="text" onChange={(event) => handleChangeInput(event)} className="form-control" placeholder="Username" />
                 </div>
-                );
-        }
-    }
+              </div>
+              <div className="row">
+                <div className="col-md-12 form-group">
+                  <input name="passWord" type="password" onChange={(event) => handleChangeInput(event)} placeholder="Enter your Password" className="form-control" />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12 form-group">
+                  <button type="submit" className="btn btn-block btn-login">Login</button>
+                </div>
+              </div>
+            </form>
+            return loginFormElement;
+          }}
+        </AuthContext.Consumer>
+
+      </div>
+    );
+  }
+}
+
+type InputForm = {
+  userName: string
+  passWord: string
 }
 
 export default LoginComponent;

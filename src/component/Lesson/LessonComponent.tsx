@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { FC } from 'react';
 
-class Lesson extends Component<any, any> {
-  render() {
-    return (
-      React.createElement("li", {className: "list-group-item"}, this.props.lessonsName)
-    )
-  };
+const Lesson: FC<{ lessonsName: string }> = ({ lessonsName }) => {
+  return (
+    <li className="list-group-item">
+      {lessonsName}
+    </li>
+  )
 };
 
 export default Lesson;

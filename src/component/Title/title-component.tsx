@@ -1,17 +1,19 @@
-import React, { Component } from 'react';
+import React, { FC } from 'react';
 
-class Title extends Component<any, any> {
-  
-  render() {
-    return (
-      <div className="page-header">
-        <h1>{this.props.mainTitle}
-          <br/>
-          <small>{this.props.subTitle}</small>
-        </h1>
-      </div>
-    )
-  };
+const Title: FC<TitleProps> = ({mainTitle, subTitle}) => {
+  return (
+    <div className="page-header">
+      <h1>{mainTitle}
+        <br />
+        <small>{subTitle}</small>
+      </h1>
+    </div>
+  )
 };
+
+type TitleProps = {
+  mainTitle: string,
+  subTitle: string
+}
 
 export default Title;
