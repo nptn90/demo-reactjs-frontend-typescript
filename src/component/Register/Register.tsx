@@ -14,10 +14,6 @@ const Register: FC = (props: any) => {
   const [isRedirectToSuccessPages, setIsRedirectToSuccessPages] = useState<boolean>(false)
   const [response, setResponse] = useState<any>(null)
 
-  useEffect(() => {
-
-  }, [])
-
   const handleSubmitRegisterForm = (event: any) => {
     event.preventDefault();
     let user: UserPersist = {

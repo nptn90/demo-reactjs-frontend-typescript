@@ -13,20 +13,20 @@ const HomeComponent: FC = () => {
     setSubTitle(newTitle)
   }
 
-    const items = courseData;
+  const items = courseData;
 
-    const elmCourse = items.map((item, index) =>
-        <Course key={index} courseId={item.id} name={item.name} time={item.time} free={item.free} lessons={item.lessons} onChangeTitle={(newTitle: string) => handleChangeTitle(newTitle)}> {item.desc} </Course>
-      );
-    return (
-      <div>
-        <Title mainTitle={mainTitle} subTitle = {subTitle}/>
-        <div className="row">
-          {elmCourse}
-        </div>
-      </div> 
+  const elmCourse = items.map((item, index) =>
+    <Course key={index} courseId={item.id} name={item.name} time={item.time} free={item.free} lessons={item.lessons} onChangeTitle={(newTitle: string) => handleChangeTitle(newTitle)}> {item.desc} </Course>
+  );
+  return (
+    <div>
+      <Title mainTitle={mainTitle} subTitle={subTitle} />
+      <div className="row">
+        {elmCourse}
+      </div>
+    </div>
 
-    )  
+  )
 };
 
 

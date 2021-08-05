@@ -1,15 +1,25 @@
 import React, { FC, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import LoginService from './LoginService'
-import { AuthContext } from '../commonService/authenticationService';
 import IntervalService from '../commonService/IntervalService'
 import { UserLogin } from './UserModel';
 import * as env from '../commonService/environmentHelper'
+import { useDispatch } from 'react-redux'
+import { changeAuth } from '../reducer/user-account-actions';
+
+const loginService: LoginService = new LoginService();
+const intervalService: IntervalService = new IntervalService();
+
+const refreshToken = (expirationDate: number) => {
+  intervalService.intervalRefreshToken(expirationDate);
+}
+
+let envValue = env.getEnvironmentValue('REACT_APP_HELLO_STRING');
+console.log(envValue);
 
 const LoginComponent: FC = (props: any) => {
 
-  const loginService: LoginService = new LoginService();
-  const intervalService: IntervalService = new IntervalService();
+  console.log("hello from login page")
 
   const [isRedirectToReffer, setIsRedirectToReffer] = useState(false);
   const [inputs, setInputs] = useState<InputForm>({
@@ -26,11 +36,9 @@ const LoginComponent: FC = (props: any) => {
     })
   }
 
-  const refreshToken = (expirationDate: number) => {
-    intervalService.intervalRefreshToken(expirationDate);
-  }
+  const dispatch = useDispatch();
 
-  const handleLogin = (event: any, context: any) => {
+  const handleLogin = (event: any) => {
     event.preventDefault();
     const user: UserLogin = {
       passWord: inputs.passWord,
@@ -41,12 +49,14 @@ const LoginComponent: FC = (props: any) => {
       .then((response: any) => {
         let token = response.data;
 
-        context.login(user.userName, token);
+        dispatch(changeAuth({
+          token: token.token,
+          currentUser: user.userName
+        }))
         sessionStorage.setItem('token', token.token);
         sessionStorage.setItem('tokenExpirationTime', token.expirationDate);
 
         refreshToken(token.expirationDate);
-        context.displayToken();
         setIsRedirectToReffer(true)
       })
       .catch((error: any) => {
@@ -55,8 +65,25 @@ const LoginComponent: FC = (props: any) => {
   }
 
   const { from } = props.location.state || { from: { pathname: "/" } }
-  let envValue = env.getEnvironmentValue('REACT_APP_HELLO_STRING');
-  console.log(envValue);
+
+  const loginForm = (
+    <form onSubmit={(event) => handleLogin(event)}>
+      <div className="row">
+        <div className="col-md-12 form-group">
+          <input name="userName" type="text" onChange={(event) => handleChangeInput(event)} className="form-control" placeholder="Username" />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-12 form-group">
+          <input name="passWord" type="password" onChange={(event) => handleChangeInput(event)} placeholder="Enter your Password" className="form-control" />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-12 form-group">
+          <button type="submit" className="btn btn-block btn-login">Login</button>
+        </div>
+      </div>
+    </form>)
 
   if (isRedirectToReffer) {
     return <Redirect to={from.pathname} />
@@ -64,29 +91,7 @@ const LoginComponent: FC = (props: any) => {
     return (
       <div className="simple-login-container">
         <h2>Login Form</h2>
-        <AuthContext.Consumer>
-          {(context) => {
-            let loginFormElement = <form onSubmit={(event) => handleLogin(event, context)}>
-              <div className="row">
-                <div className="col-md-12 form-group">
-                  <input name="userName" type="text" onChange={(event) => handleChangeInput(event)} className="form-control" placeholder="Username" />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12 form-group">
-                  <input name="passWord" type="password" onChange={(event) => handleChangeInput(event)} placeholder="Enter your Password" className="form-control" />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12 form-group">
-                  <button type="submit" className="btn btn-block btn-login">Login</button>
-                </div>
-              </div>
-            </form>
-            return loginFormElement;
-          }}
-        </AuthContext.Consumer>
-
+        {loginForm}
       </div>
     );
   }
