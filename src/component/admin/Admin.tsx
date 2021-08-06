@@ -5,16 +5,25 @@ import myAPI from '../commonService/myAPI';
 import * as stringConstant from '../commonService/StringConst';
 import { UserPersist } from "../Login/UserModel";
 import { TReducers } from "../reducer";
+import styles from "./styles.module.css";
+import classNames from 'classnames'
 
 const AdminPage: FC = () => {
 
   const [listUser, setListUser] = useState<UserPersist[]>([]);
+  const [isShowActions, setIsShowActions] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<string>('');
 
   const auth = useSelector((state: TReducers) => state.userReducer.authState);
 
   useEffect(() => {
     getAllUser();
   }, [auth])
+
+  useEffect(() => {
+    getAllUser();
+  }, [auth])
+
 
   function getAllUser() {
     return myAPI.get(stringConstant.GET_ALL_USERS)
@@ -26,7 +35,32 @@ const AdminPage: FC = () => {
       })
   }
 
+  function hanleDeletUser(userName: string) {
+    return myAPI.delete(stringConstant.DELETE_USERS(userName))
+      .then((response: AxiosResponse) => {
+        setListUser(listUser.filter(item => item.name !== userName))
+      })
+      .catch((err: AxiosError) => {
+        console.log(err)
+      })
+  }
+
+  function handleShowAction(event: any) {
+    setSelectedUser(event.currentTarget.children[0].innerText)
+    setIsShowActions(true)
+  }
+
+  const actions = isShowActions 
+  ? (
+    <div className={styles.buttonWrapper}>
+        <button className={classNames("btn btn-block", styles.buttonApp)}
+        onClick={() => hanleDeletUser(selectedUser)}>Delete User: {selectedUser}</button>
+    </div>
+  ) 
+  : null
+
   return (
+    <>
     <table className="table table-striped">
       <thead>
         <tr>
@@ -39,7 +73,7 @@ const AdminPage: FC = () => {
         {
           listUser.map((user: UserPersist) => {
             return (
-              <tr key={user.email}>
+              <tr key={user.email} onClick={handleShowAction}>
                 <td>{user.name}</td>
                 <td>{user.fullName}</td>
                 <td>{user.email}</td>
@@ -49,6 +83,8 @@ const AdminPage: FC = () => {
         }
       </tbody>
     </table>
+    {actions}
+    </>
   )
 }
 

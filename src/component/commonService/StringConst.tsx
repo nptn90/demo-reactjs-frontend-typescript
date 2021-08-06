@@ -5,3 +5,4 @@ export const LOGIN_URL = publicPrefix + "/login";
 export const REFRESH_URL = publicPrefix + "/refresh";
 export const REGISTER_URL = publicPrefix + "/registerUser";
 export const GET_ALL_USERS = "/user/list";
+export const DELETE_USERS = (userName: string) => `/user/${userName}/delete`;
