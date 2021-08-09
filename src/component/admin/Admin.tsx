@@ -5,8 +5,9 @@ import myAPI from '../commonService/myAPI';
 import * as stringConstant from '../commonService/StringConst';
 import { UserPersist } from "../Login/UserModel";
 import { TReducers } from "../reducer";
-import styles from "./styles.module.css";
+import styles from "./styles.module.scss";
 import classNames from 'classnames'
+import { toast } from "react-toastify";
 
 const AdminPage: FC = () => {
 
@@ -31,7 +32,7 @@ const AdminPage: FC = () => {
         setListUser(response.data)
       })
       .catch((err: AxiosError) => {
-        console.log(err)
+        toast.error("Get all user fail")
       })
   }
 
@@ -42,6 +43,7 @@ const AdminPage: FC = () => {
       })
       .catch((err: AxiosError) => {
         console.log(err)
+        toast.error("cannot delete user")
       })
   }
 
